@@ -1,12 +1,13 @@
-from order import Order
-from coffee import Coffee
 from typing import List
+# from lib.order import Order
+from lib.coffee import Coffee
+
 class Customer:
-    _all_order = []
+    _all_orders = []
 
     def __init__(self,name):
         self.name =name
-        self._order =[]
+        self._orders =[]
     @property
     def name(self):
         return self._name  
@@ -18,31 +19,24 @@ class Customer:
             raise ValueError('Name must be between 1 and 15 characters long.')
         self._name = value
 
-    def add_order(self,order):
-        if not isinstance (order, Order):
-            raise TypeError('Order must be instances of Order.')
-        if order not in self._order:
-            self._order.append(order)
-        if order not in Customer._all_order:
-            Customer._all_order.append(order)  
 
-    def order(self) ->List [Order]:
-        return self._order       
+    def order(self):
+        return self._orders       
 
     def coffees(self) ->List [Coffee]:
-        unique_coffee = set(order.coffee for order in self._order )
-        return unique_coffee   
+        unique_coffee = set(order.coffee for order in self._orders )
+        return list(unique_coffee )  
     
     def create_order(self, coffee, price):
-        if not isinstance(coffee, Coffee):
-            raise TypeError('Coffee must be instances of Coffee.')
-        if not isinstance(price,(float, int)):
-            raise TypeError('Price must be float')
-        if not (1.0 <= price <= 10.0):
-            raise ValueError('price must be between 1.0 and 10.0.')
-        
-        order  =Order(customer = self, coffee = coffee, price = price )
-        self.add_order(order)
+        from lib.order import Order
+        order = Order(self, coffee, price)
+        self._orders.append(order)
         coffee.add_order(order)
-
         return order
+       
+    @classmethod
+    def most_aficionado(cls, coffee):
+        customers = coffee.customers()
+        if not customers:
+            return None
+        return max(customers, key=lambda customer: sum(order.price for order in customer.orders() if order.coffee == coffee))

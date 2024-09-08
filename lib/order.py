@@ -1,7 +1,7 @@
-from customer import Customer
-from coffee import Coffee
+from lib.customer import Customer
+from lib.coffee import Coffee
 class Order:
-    def __init__(self,customer, coffee, price) -> None:
+    def __init__(self,customer, coffee, price: float) -> None:
         self.customer = customer
         self.coffee =coffee
         self.price = price
@@ -13,7 +13,7 @@ class Order:
     @customer.setter
     def customer(self,value):
         if not isinstance(value, Customer):
-            raise TypeError('Customer must be instances of Customer.')
+            raise TypeError('Customer must be instance of Customer.')
         self._customer = value
 
     @property 
@@ -23,7 +23,7 @@ class Order:
     @coffee.setter
     def coffee(self,value):
         if not isinstance(value, Coffee):
-            raise TypeError('Coffee must be inbstances of Coffee.')
+            raise TypeError('Coffee must be instance of Coffee.')
         self._coffee = value
 
     @property 
@@ -32,8 +32,8 @@ class Order:
 
     @price.setter
     def price(self,value):
-        if not isinstance (value(float, int)):
-            raise TypeError('Price must be float.')
+        if not isinstance (value,(float, int)):
+            raise TypeError('Price must be a float or integer.')
         if not (1.0 <= value <= 10.0):
             raise ValueError('Price must be between 1.0 and 10.0.') 
         self._price = float(value)

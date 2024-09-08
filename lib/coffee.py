@@ -1,5 +1,4 @@
-from typing import List
-from order import Order
+
 class Coffee:
     _all_orders = []
     def __init__(self,name) -> None:
@@ -13,21 +12,26 @@ class Coffee:
     def name(self,value):
         if not isinstance(value, str):
             raise TypeError('Name must be a string.')
-        if not (len(value) <3):
+        if len(value) < 3:
             raise ValueError('Name must be atleast 3 characters long.')
         self._name = value
+    
+    def add_order(self, order) -> None:
+        self._orders.append(order)
+        Coffee._all_orders.append(order)
 
-    def add_order(self, order):
-        if not isinstance(order, Order):
-           raise TypeError('Order must be instance of Order.')
-        if order not in self._orders:
-            self._orders.append(order)   
-        if order not in Coffee._all_orders:
-            Coffee._all_orders.append(order)    
-
-    def orders(self) -> List ['Order']:
+    def orders(self):
         return self._orders 
 
-    def customers(self) -> List ['Customers']:
+    def customers(self):
         unique_customer = set(order.customer for order in self._orders)
-        return List(unique_customer)
+        return list(unique_customer)
+    
+    def num_orders(self):
+        return len(self._orders)
+    
+    def average_price(self):
+        if not self._orders:
+            return 0.0
+        total_price = sum(order.price for order in self._orders)
+        return total_price / len(self._orders)
